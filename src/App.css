@@ -30,3 +30,8 @@
     transform: rotate(360deg);
   }
 }
+
+.modal {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}

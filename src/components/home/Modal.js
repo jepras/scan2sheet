@@ -21,13 +21,12 @@ const Modal = ({ closeModal, modalState, items }) => {
           <table className="table">
             <thead>
               <tr>
-                <th>vare</th>
-                <th>brutto</th>
-                <th>antalpris</th>
-                <th>netto</th>
-                <th>rabat %</th>
-                <th>netto efter rabat</th>
-                <th>antal købt og pris</th>
+                <th>Vare</th>
+                <th>Brutto</th>
+                <th>Antalpris</th>
+                <th>Rabat %</th>
+                <th>Netto efter rabat</th>
+                <th>Antal</th>
               </tr>
             </thead>
             <tbody>
@@ -37,11 +36,16 @@ const Modal = ({ closeModal, modalState, items }) => {
                     <td>{item[1]}</td>
                     <td>{item[5]}</td>
                     <td>{item[4]}</td>
-                    <td>{item[6]}</td>
                     <td>{item[7]}</td>
                     <td>{item[8]}</td>
                     <td>
-                      <TotalPrice efterRabat={item[8]} />
+                      <TotalPrice
+                        efterRabat={item[8]}
+                        vareNr={item[0]}
+                        beskrivelse={item[1]}
+                        brutto={item[5]}
+                        closeModal={closeModal}
+                      />
                     </td>
                   </tr>
                 ];
@@ -50,15 +54,9 @@ const Modal = ({ closeModal, modalState, items }) => {
           </table>
         </section>
         <footer className="modal-card-foot">
-          <button
-            className="button button-primary button-shadow"
-            /* onClick={submitModal(data)} */
-          >
-            Submit
-          </button>
-          <button className="button button-secondary" onClick={closeModal}>
-            Cancel
-          </button>
+          <p className="text-center">
+            remember to love your little brother <span role="img">✌</span>
+          </p>
         </footer>
       </div>
     </div>

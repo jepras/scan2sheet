@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import base from "../../config/airtableConfig";
+var total;
 
 class TotalPrice extends Component {
   constructor() {
@@ -17,13 +19,29 @@ class TotalPrice extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.getValue();
+    base("Table 1").create(
+      {
+        varenr: this.props.vareNr,
+        beskrivelse: this.props.beskrivelse,
+        brutto: this.props.brutto,
+        netto: total
+      },
+      function(err, record) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log(record.getId());
+      }
+    );
+    this.props.closeModal();
   }
 
   render() {
     console.log(this.props.efterRabat);
     var efterRabat = parseFloat(this.props.efterRabat.replace(/,/, "."));
     console.log(efterRabat);
+    total = this.state.value * efterRabat;
 
     return (
       <div>
@@ -33,12 +51,13 @@ class TotalPrice extends Component {
               type="number"
               value={this.state.value}
               onChange={this.handleChange}
+              autoFocus
             />
           </label>
-          <input type="submit" value="Udregn" />
+          <input type="submit" value="Send til sheet" />
         </form>
         <strong>Totalpris: </strong>
-        {this.state.value * efterRabat}
+        {total}
       </div>
     );
   }

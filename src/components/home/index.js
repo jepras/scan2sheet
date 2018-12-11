@@ -121,20 +121,31 @@ class Home extends Component {
 
     return (
       <div className="has-text-centered">
+        <section class="hero is-medium is-primary is-bold">
+          <div class="hero-body">
+            <div className="columns is-mobile">
+              <div className="column is-half is-offset-one-quarter">
+                <h1 class="title">Search</h1>
+                <form onSubmit={this.handleSubmit}>
+                  <label>
+                    <input
+                      type="number"
+                      className="input is-medium is-rounded"
+                      placeholder="scan yo shit"
+                      value={this.state.value}
+                      onChange={this.handleChange}
+                      autoFocus
+                    />
+                  </label>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
         {/* <ul>{itemFound}</ul>  */}
         <hr />
-        <p className="subtitle">Search</p>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <input
-              type="number"
-              value={this.state.value}
-              onChange={this.handleChange}
-            />
-          </label>
-          <input type="submit" value="Search" />
-        </form>
+
+        <p>test numbers</p>
         <p>multiple nr: 8348700009</p>
         <Modal
           closeModal={this.toggleModal}

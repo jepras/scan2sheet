@@ -1,4 +1,5 @@
 import airtableRecord from "./airtableReducer";
+import sheetReducer from "./sheetReducer";
 import { combineReducers } from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
@@ -8,7 +9,8 @@ const rootReducer = combineReducers({
   firestore: firestoreReducer,
   // for login
   firebase: firebaseReducer,
-  airtableRecord
+  airtableRecord,
+  sheetReducer
 });
 
 export default rootReducer;

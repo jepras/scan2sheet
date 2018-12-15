@@ -25,7 +25,7 @@ const Modal = ({ closeModal, modalState, items }) => {
                 <th>Brutto</th>
                 <th>Antalpris</th>
                 <th>Rabat %</th>
-                <th>Netto efter rabat</th>
+                <th>Brutto efter rabat</th>
                 <th>Antal</th>
               </tr>
             </thead>

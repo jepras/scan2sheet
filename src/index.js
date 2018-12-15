@@ -13,7 +13,7 @@ import logger from "redux-logger";
 import { reduxFirestore, getFirestore } from "redux-firestore";
 import { reactReduxFirebase, getFirebase } from "react-redux-firebase";
 import rootReducer from "./store/reducers";
-import fbConfig from "./config/config";
+import fbConfig from "./config/fbConfig";
 
 let middleware = applyMiddleware(
   thunk.withExtraArgument({ getFirebase, getFirestore }),

@@ -120,8 +120,6 @@ class Home extends Component {
       kolAntalPris: selectedSheet.kolAntalPris,
       tabName: selectedSheet.tabName
     });
-
-    console.log(this.state.sheetId);
   }
 
   render() {

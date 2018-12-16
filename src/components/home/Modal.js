@@ -1,13 +1,22 @@
 import React from "react";
 import TotalPrice from "./TotalPrice";
 
-const Modal = ({ closeModal, modalState, items }) => {
+const Modal = ({
+  closeModal,
+  modalState,
+  items,
+  kolVareNr,
+  kolVareBeskrivelse,
+  kolAntalPris,
+  kolRabatPct,
+  kolBruttoEfterRabat,
+  kolBrutto
+}) => {
   if (!modalState) {
     return null;
   }
   console.log(items);
   console.log(items[0]);
-  const data = ["lala"];
 
   return (
     <div className="modal is-active">
@@ -33,8 +42,8 @@ const Modal = ({ closeModal, modalState, items }) => {
               {items.map((item, i) => {
                 return [
                   <tr key={i}>
-                    <td>{item[1]}</td>
-                    <td>{item[5]}</td>
+                    <td>{item[kolVareNr]}</td>
+                    <td>{item[kolBrutto]}</td>
                     <td>{item[4]}</td>
                     <td>{item[7]}</td>
                     <td>{item[8]}</td>
@@ -55,7 +64,10 @@ const Modal = ({ closeModal, modalState, items }) => {
         </section>
         <footer className="modal-card-foot">
           <p className="text-center">
-            remember to love your little brother <span role="img">✌</span>
+            remember to love your little brother{" "}
+            <span role="img" aria-label="emoji">
+              ✌
+            </span>
           </p>
         </footer>
       </div>

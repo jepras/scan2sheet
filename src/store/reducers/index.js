@@ -9,8 +9,8 @@ const rootReducer = combineReducers({
   firestore: firestoreReducer,
   // for login
   firebase: firebaseReducer,
-  airtableRecord,
-  sheetReducer
+  airtableRecord: airtableRecord,
+  sheetReducer: sheetReducer
 });
 
 export default rootReducer;

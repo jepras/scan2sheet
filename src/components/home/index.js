@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { compose } from "redux";
 import config from "../../config/apiConfig";
+import { firestoreConnect } from "react-redux-firebase";
 
 import Modal from "./Modal";
 import SheetModal from "./SheetModal";
@@ -21,10 +23,19 @@ class Home extends Component {
       post: "",
       modalState: false,
       modalSheetState: false,
-      sheet: ""
+      sheetName: "",
+      sheetId: "",
+      kolVareNr: "0",
+      kolVareBeskrivelse: "",
+      kolRabatPct: "",
+      kolBruttoEfterRabat: "",
+      kolBrutto: "",
+      kolAntalPris: "",
+      tabName: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSheetSubmit = this.handleSheetSubmit.bind(this);
     this.getValue = this.getValue.bind(this);
 
     this.toggleModal = this.toggleModal.bind(this);
@@ -52,21 +63,9 @@ class Home extends Component {
   }
 
   handleChange(event) {
-    let state = event.target.id;
-
-    switch (state) {
-      case "varenr":
-        console.log(event.target.value);
-        this.setState({ kolVareNr: event.target.value });
-        break;
-      case "value":
-        this.setState({ value: event.target.value });
-        console.log("found value in switch statement");
-        break;
-
-      default:
-        break;
-    }
+    this.setState({
+      [event.target.id]: event.target.value
+    });
   }
 
   handleSubmit(event) {
@@ -76,20 +75,25 @@ class Home extends Component {
   }
 
   getValue = () => {
+    const API =
+      "https://sheets.googleapis.com/v4/spreadsheets/" +
+      this.state.sheetId +
+      "/values:batchGet?ranges=Danzafe&majorDimension=ROWS&key=" +
+      config.apiKey;
+
     fetch(API)
       .then(response => response.json())
 
       .then(data => {
         console.log(data);
         let batchRowValues = data.valueRanges[0].values;
-        console.log(batchRowValues[1]);
-        /*         console.log(this.state.kolVareNr);
+        console.log("test batch: " + batchRowValues[1]);
         let kolVareNr = parseFloat(this.state.kolVareNr);
-        console.log(kolVareNr); */
+        console.log(kolVareNr);
 
         let found = [];
         for (let i = 1; i < batchRowValues.length; i++) {
-          if (batchRowValues[i][0] === this.state.value) {
+          if (batchRowValues[i][kolVareNr] === this.state.value) {
             console.log("found!" + batchRowValues[i]);
             found.push(batchRowValues[i]);
           }
@@ -99,8 +103,28 @@ class Home extends Component {
       .then(this.toggleModal());
   };
 
+  handleSheetSubmit(event) {
+    console.log(this.props.sheets);
+    console.log(this.props.sheets[event.target.value]);
+    var selectedSheet = this.props.sheets[event.target.value];
+    console.log(selectedSheet.sheetId);
+
+    this.setState({
+      sheetName: selectedSheet.sheetName,
+      sheetId: selectedSheet.sheetId,
+      kolVareNr: selectedSheet.kolVareNr,
+      kolVareBeskrivelse: selectedSheet.kolVareBeskrivelse,
+      kolRabatPct: selectedSheet.kolRabatPct,
+      kolBruttoEfterRabat: selectedSheet.kolBruttoEfterRabat,
+      kolBrutto: selectedSheet.kolBrutto,
+      kolAntalPris: selectedSheet.kolAntalPris,
+      tabName: selectedSheet.tabName
+    });
+
+    console.log(this.state.sheetId);
+  }
+
   render() {
-    console.log(config);
     /*  <li>Varenr: {item[0]}</li>
         <li>Beskrivelse: {item[1]}</li>
         <li>EAN: {item[2]}</li>
@@ -111,6 +135,7 @@ class Home extends Component {
         <li>Rabat %: {item[7]}</li>
         <li>Netto efter rabat: {item[8]}</li>
         <li>Rabatgruppe: {item[9]}</li> */
+    const { profile, sheets } = this.props;
 
     return (
       <div className="has-text-centered">
@@ -126,16 +151,25 @@ class Home extends Component {
                 >
                   Set up pricelist
                 </button>
-                <form onSubmit={this.handleSubmit}>
+                <form onChange={this.handleSheetSubmit}>
                   <label>
                     Choose pricelist
-                    <select onChange={this.handleChange} id="varenr">
-                      <option value="0">A</option>
-                      <option value="1">B</option>
-                      <option value="2">C</option>
-                      <option value="3">D</option>
+                    <select>
+                      {sheets &&
+                        sheets.map((sheet, index) => {
+                          return (
+                            <option key={index} value={index}>
+                              {sheet.id} - {index}
+                            </option>
+                          );
+                        })}
                     </select>
                   </label>
+                  {/* <button type="submit" className="button">
+                    Choose pricelist
+                  </button> */}
+                </form>
+                <form onSubmit={this.handleSubmit}>
                   <label>
                     <input
                       type="number"
@@ -162,6 +196,12 @@ class Home extends Component {
           modalState={this.state.modalState}
           items={this.state.items}
           submitModal={this.submitModal}
+          kolVareNr={this.state.kolVareNr}
+          kolVareBeskrivelse={this.state.kolVareBeskrivelse}
+          kolRabatPct={this.state.kolRabatPct}
+          kolBruttoEfterRabat={this.state.kolBruttoEfterRabat}
+          kolBrutto={this.state.kolBrutto}
+          kolAntalPris={this.state.kolAntalPris}
         />
         <SheetModal
           closeModal={this.toggleSheetModal}
@@ -173,17 +213,23 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state);
+  var sheets = state.firestore.ordered.sheets
+    ? state.firestore.ordered.sheets
+    : null;
   return {
     // take in data from state,firestore,ordered,data
     /*     sheets: state.firestore.sheets
      */
-    /* auth: state.firebase.auth,
-    profile: state.firebase.profile */
+    sheets: sheets,
+    auth: state.firebase.auth,
+    profile: state.firebase.profile
   };
 };
 
-export default connect(
-  mapStateToProps,
-  null
+/* export default connect(
+  mapStateToProps
+)(Home); */
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([{ collection: "sheets" }])
 )(Home);

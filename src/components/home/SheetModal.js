@@ -9,6 +9,7 @@ class SheetModal extends Component {
     this.state = {
       sheetName: "",
       sheetId: "",
+      tabName: "",
       kolVareNr: "0",
       kolVareBeskrivelse: "0",
       kolBrutto: "0",
@@ -56,6 +57,18 @@ class SheetModal extends Component {
                     <input
                       class="input"
                       id="sheetName"
+                      type="text"
+                      placeholder="Text input"
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Name of tab</label>
+                  <div class="control">
+                    <input
+                      class="input"
+                      id="tabName"
                       type="text"
                       placeholder="Text input"
                       onChange={this.handleChange}
@@ -209,7 +222,10 @@ class SheetModal extends Component {
           </section>
           <footer className="modal-card-foot">
             <p className="text-center">
-              remember to love your little brother <span role="img">✌</span>
+              remember to love your little brother{" "}
+              <span role="img" aria-label="emoji">
+                ✌
+              </span>
             </p>
           </footer>
         </div>

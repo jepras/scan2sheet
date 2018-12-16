@@ -21,7 +21,20 @@ let middleware = applyMiddleware(
   logger
 );
 
-let store = createStore(
+const store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
+    reactReduxFirebase(fbConfig, {
+      userProfile: "users",
+      useFirestoreForProfile: true,
+      attachAuthIsReady: true
+    }), // redux binding for firebase
+    reduxFirestore(fbConfig) // redux bindings for firestore
+  )
+);
+
+/* let store = createStore(
   rootReducer,
   compose(
     middleware,
@@ -33,9 +46,9 @@ let store = createStore(
       attachAuthIsReady: true
     })
     /*     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-     */
+     
   )
-);
+); */
 
 store.firebaseAuthIsReady.then(() => {
   ReactDOM.render(

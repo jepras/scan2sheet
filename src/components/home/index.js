@@ -42,9 +42,20 @@ class Home extends Component {
     this.toggleSheetModal = this.toggleSheetModal.bind(this);
   }
 
-  componentDidMount() {
-    /* load saves pricelists in firebase */
-  }
+  /* componentDidMount(event) {
+    /* load saves pricelists in firebase 
+    this.setState({
+      sheetName: this.state.sheets[0].sheetName,
+      sheetId: this.state.sheets.sheetId
+      kolVareNr: selectedSheet.kolVareNr,
+      kolVareBeskrivelse: selectedSheet.kolVareBeskrivelse,
+      kolRabatPct: selectedSheet.kolRabatPct,
+      kolBruttoEfterRabat: selectedSheet.kolBruttoEfterRabat,
+      kolBrutto: selectedSheet.kolBrutto,
+      kolAntalPris: selectedSheet.kolAntalPris,
+      tabName: selectedSheet.tabName
+    });
+  } */
 
   toggleModal() {
     this.setState((prev, props) => {
@@ -57,7 +68,6 @@ class Home extends Component {
   toggleSheetModal() {
     this.setState((prev, props) => {
       const newState = !prev.modalSheetState;
-
       return { modalSheetState: newState };
     });
   }
@@ -66,11 +76,16 @@ class Home extends Component {
     this.setState({
       [event.target.id]: event.target.value
     });
+
+    if (event.target.value.length > 5) {
+      console.log("..starting to fetch data..");
+      this.getValue();
+    }
   }
 
   handleSubmit(event) {
-    /*     alert("A name was submitted: " + this.state.value); */
-    this.getValue();
+    console.log(this.state);
+    this.toggleModal();
     event.preventDefault();
   }
 
@@ -78,36 +93,64 @@ class Home extends Component {
     const API =
       "https://sheets.googleapis.com/v4/spreadsheets/" +
       this.state.sheetId +
-      "/values:batchGet?ranges=Danzafe&majorDimension=ROWS&key=" +
+      "/values:batchGet?ranges=" +
+      this.state.tabName +
+      "&majorDimension=ROWS&key=" +
       config.apiKey;
+
+    /* const fastAPI =
+      "https://sheets.googleapis.com/v4/spreadsheets/1fMcBPX63LaF_DcdOraoPXVdJaYGii4-yd5F-Ho8J3NQ/values:batchGet?ranges=Danzafe&majorDimension=ROWS&key=AIzaSyC_GCcVWD414IcUAMu2lG1aToCk7n2x9m4";
+    fetch(fastAPI).then(response => console.log(response)); */
 
     fetch(API)
       .then(response => response.json())
-
       .then(data => {
-        console.log(data);
-        let batchRowValues = data.valueRanges[0].values;
-        console.log("test batch: " + batchRowValues[1]);
-        let kolVareNr = parseFloat(this.state.kolVareNr);
-        console.log(kolVareNr);
+        console.log("found data!");
 
+        // Initiate variables
+        let batchRowValues = data.valueRanges[0].values;
+        let kolVareNr = parseFloat(this.state.kolVareNr);
+        let kolVareBeskrivelse = this.state.kolVareBeskrivelse;
+
+        // Initiate variable for setting state
         let found = [];
-        for (let i = 1; i < batchRowValues.length; i++) {
-          if (batchRowValues[i][kolVareNr] === this.state.value) {
-            console.log("found!" + batchRowValues[i]);
-            found.push(batchRowValues[i]);
+
+        // Check if string is digits
+        var isnum = /^\d+$/.test(this.state.value);
+
+        if (isnum) {
+          console.log("this.state.value is a number! " + this.state.value);
+          for (let i = 1, len = batchRowValues.length; i < len; i++) {
+            if (batchRowValues[i][kolVareNr].includes(this.state.value)) {
+              /* if (batchRowValues[i][kolVareNr] === this.state.value) { */
+              /* let found = []; */
+              console.log("found! " + batchRowValues[i]);
+              found.push(batchRowValues[i]);
+              this.setState({ items: found });
+            }
+          }
+        } else {
+          console.log("this.state.value is text: " + this.state.value);
+          for (let i = 1, len = batchRowValues.length; i < len; i++) {
+            if (
+              batchRowValues[i][kolVareBeskrivelse].includes(this.state.value)
+            ) {
+              console.log("found! " + batchRowValues[i]);
+              found.push(batchRowValues[i]);
+              this.setState({ items: found });
+            }
           }
         }
-        this.setState({ items: found });
       })
-      .then(this.toggleModal());
+      .catch(function(err) {
+        alert("didn't find item");
+        console.log("Error in fetch", err);
+      });
   };
 
   handleSheetSubmit(event) {
-    console.log(this.props.sheets);
-    console.log(this.props.sheets[event.target.value]);
+    event.preventDefault();
     var selectedSheet = this.props.sheets[event.target.value];
-    console.log(selectedSheet.sheetId);
 
     this.setState({
       sheetName: selectedSheet.sheetName,
@@ -133,15 +176,16 @@ class Home extends Component {
         <li>Rabat %: {item[7]}</li>
         <li>Netto efter rabat: {item[8]}</li>
         <li>Rabatgruppe: {item[9]}</li> */
-    const { profile, sheets } = this.props;
+    const { sheets } = this.props;
+    console.log("logging state from render(): " + JSON.stringify(this.state));
 
     return (
       <div className="has-text-centered">
-        <section class="hero is-medium is-primary is-bold">
-          <div class="hero-body">
+        <section className="hero is-medium is-primary is-bold">
+          <div className="hero-body">
             <div className="columns is-mobile">
               <div className="column is-half is-offset-one-quarter">
-                <h1 class="title">Search</h1>
+                <h1 className="title">Search</h1>
                 <button
                   type="submit"
                   className="button"
@@ -151,13 +195,13 @@ class Home extends Component {
                 </button>
                 <form onChange={this.handleSheetSubmit}>
                   <label>
-                    Choose pricelist
                     <select>
+                      <option>-- Choose Pricelist --</option>
                       {sheets &&
                         sheets.map((sheet, index) => {
                           return (
                             <option key={index} value={index}>
-                              {sheet.id} - {index}
+                              {sheet.id}
                             </option>
                           );
                         })}
@@ -170,7 +214,7 @@ class Home extends Component {
                 <form onSubmit={this.handleSubmit}>
                   <label>
                     <input
-                      type="number"
+                      type="text"
                       className="input is-medium is-rounded"
                       placeholder="scan yo shit"
                       id="value"
@@ -188,7 +232,12 @@ class Home extends Component {
         <hr />
 
         <p>test numbers</p>
-        <p>multiple nr: 8348700009</p>
+        <p>Danzafe: 5655005065</p>
+        <p>Carl Ras: 14181681</p>
+        <p>Pro-Sec: 46620</p>
+        <p>Sanistaal: 444810</p>
+        <p>Danzafe: </p>
+        <p>Danzafe: </p>
         <Modal
           closeModal={this.toggleModal}
           modalState={this.state.modalState}
@@ -200,6 +249,7 @@ class Home extends Component {
           kolBruttoEfterRabat={this.state.kolBruttoEfterRabat}
           kolBrutto={this.state.kolBrutto}
           kolAntalPris={this.state.kolAntalPris}
+          sheetName={this.state.sheetName}
         />
         <SheetModal
           closeModal={this.toggleSheetModal}

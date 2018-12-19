@@ -10,13 +10,14 @@ const Modal = ({
   kolAntalPris,
   kolRabatPct,
   kolBruttoEfterRabat,
-  kolBrutto
+  kolBrutto,
+  sheetName
 }) => {
   if (!modalState) {
     return null;
   }
-  console.log(items);
-  console.log(items[0]);
+
+  console.log("items for modal: " + items[0]);
 
   return (
     <div className="modal is-active">
@@ -30,12 +31,13 @@ const Modal = ({
           <table className="table">
             <thead>
               <tr>
-                <th>Vare</th>
-                <th>Brutto</th>
-                <th>Antalpris</th>
-                <th>Rabat %</th>
-                <th>Brutto efter rabat</th>
+                <th>Nr</th>
+                <th>Beskrivelse</th>
                 <th>Antal</th>
+                <th>Brutto</th>
+                <th>Rabat %</th>
+                <th>Netto</th>
+                <th>På lager</th>
               </tr>
             </thead>
             <tbody>
@@ -43,16 +45,18 @@ const Modal = ({
                 return [
                   <tr key={i}>
                     <td>{item[kolVareNr]}</td>
+                    <td>{item[kolVareBeskrivelse]}</td>
+                    <td>{item[kolAntalPris]}</td>
                     <td>{item[kolBrutto]}</td>
-                    <td>{item[4]}</td>
-                    <td>{item[7]}</td>
-                    <td>{item[8]}</td>
+                    <td>{item[kolRabatPct]}</td>
+                    <td>{item[kolBruttoEfterRabat]}</td>
                     <td>
                       <TotalPrice
-                        efterRabat={item[8]}
-                        vareNr={item[0]}
-                        beskrivelse={item[1]}
-                        brutto={item[5]}
+                        efterRabat={item[kolBruttoEfterRabat]}
+                        vareNr={item[kolVareNr]}
+                        beskrivelse={item[kolVareBeskrivelse]}
+                        brutto={item[kolBrutto]}
+                        sheetName={sheetName}
                         closeModal={closeModal}
                       />
                     </td>

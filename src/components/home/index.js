@@ -6,12 +6,8 @@ import { firestoreConnect } from "react-redux-firebase";
 
 import Modal from "./Modal";
 import SheetModal from "./SheetModal";
-
-const API =
-  "https://sheets.googleapis.com/v4/spreadsheets/" +
-  config.danzafeSheet +
-  "/values:batchGet?ranges=Danzafe&majorDimension=ROWS&key=" +
-  config.apiKey;
+import AirtableEmbed from "./AirtableEmbed";
+import Navbar from "../layout/Navbar";
 
 class Home extends Component {
   constructor() {
@@ -22,6 +18,7 @@ class Home extends Component {
       value: "",
       post: "",
       modalState: false,
+      airtableState: false,
       modalSheetState: false,
       sheetName: "",
       sheetId: "",
@@ -31,7 +28,8 @@ class Home extends Component {
       kolBruttoEfterRabat: "",
       kolBrutto: "",
       kolAntalPris: "",
-      tabName: ""
+      tabName: "",
+      updated: 0
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,56 +38,35 @@ class Home extends Component {
 
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleSheetModal = this.toggleSheetModal.bind(this);
+    this.updateAirtable = this.updateAirtable.bind(this);
   }
 
-  /* componentDidMount(event) {
-    /* load saves pricelists in firebase 
-    this.setState({
-      sheetName: this.state.sheets[0].sheetName,
-      sheetId: this.state.sheets.sheetId
-      kolVareNr: selectedSheet.kolVareNr,
-      kolVareBeskrivelse: selectedSheet.kolVareBeskrivelse,
-      kolRabatPct: selectedSheet.kolRabatPct,
-      kolBruttoEfterRabat: selectedSheet.kolBruttoEfterRabat,
-      kolBrutto: selectedSheet.kolBrutto,
-      kolAntalPris: selectedSheet.kolAntalPris,
-      tabName: selectedSheet.tabName
-    });
-  } */
-
-  toggleModal() {
-    this.setState((prev, props) => {
-      const newState = !prev.modalState;
-
-      return { modalState: newState };
-    });
-  }
-
-  toggleSheetModal() {
-    this.setState((prev, props) => {
-      const newState = !prev.modalSheetState;
-      return { modalSheetState: newState };
-    });
-  }
-
+  /*   shouldComponentUpdate(nextProps, nextState) {}
+   */
+  // react on changes in form
   handleChange(event) {
     this.setState({
       [event.target.id]: event.target.value
     });
 
+    // start searching as the user type
     if (event.target.value.length > 5) {
       console.log("..starting to fetch data..");
       this.getValue();
     }
   }
 
+  // log state, open modal & reset form
   handleSubmit(event) {
+    event.preventDefault();
     console.log(this.state);
     this.toggleModal();
-    event.preventDefault();
+    event.target.reset();
   }
 
+  // function for searching pricelist
   getValue = () => {
+    // initiate API with state variables
     const API =
       "https://sheets.googleapis.com/v4/spreadsheets/" +
       this.state.sheetId +
@@ -98,18 +75,15 @@ class Home extends Component {
       "&majorDimension=ROWS&key=" +
       config.apiKey;
 
-    /* const fastAPI =
-      "https://sheets.googleapis.com/v4/spreadsheets/1fMcBPX63LaF_DcdOraoPXVdJaYGii4-yd5F-Ho8J3NQ/values:batchGet?ranges=Danzafe&majorDimension=ROWS&key=AIzaSyC_GCcVWD414IcUAMu2lG1aToCk7n2x9m4";
-    fetch(fastAPI).then(response => console.log(response)); */
-
+    // initiate fetch
     fetch(API)
       .then(response => response.json())
       .then(data => {
-        console.log("found data!");
-
-        // Initiate variables
+        // search variables in right place
         let batchRowValues = data.valueRanges[0].values;
+        // format column number string as integer
         let kolVareNr = parseFloat(this.state.kolVareNr);
+        // minify column description
         let kolVareBeskrivelse = this.state.kolVareBeskrivelse;
 
         // Initiate variable for setting state
@@ -119,17 +93,15 @@ class Home extends Component {
         var isnum = /^\d+$/.test(this.state.value);
 
         if (isnum) {
-          console.log("this.state.value is a number! " + this.state.value);
+          // loop through pricelist for number
           for (let i = 1, len = batchRowValues.length; i < len; i++) {
             if (batchRowValues[i][kolVareNr].includes(this.state.value)) {
-              /* if (batchRowValues[i][kolVareNr] === this.state.value) { */
-              /* let found = []; */
               console.log("found! " + batchRowValues[i]);
               found.push(batchRowValues[i]);
-              this.setState({ items: found });
             }
           }
         } else {
+          // loop through pricelist for description
           console.log("this.state.value is text: " + this.state.value);
           for (let i = 1, len = batchRowValues.length; i < len; i++) {
             if (
@@ -137,10 +109,11 @@ class Home extends Component {
             ) {
               console.log("found! " + batchRowValues[i]);
               found.push(batchRowValues[i]);
-              this.setState({ items: found });
             }
           }
         }
+        // update state with found items
+        this.setState({ items: found });
       })
       .catch(function(err) {
         alert("didn't find item");
@@ -148,87 +121,151 @@ class Home extends Component {
       });
   };
 
+  // For opening search modal
+  toggleModal() {
+    this.setState((prev, props) => {
+      const newState = !prev.modalState;
+      const newAirtableState = !prev.airtableState;
+      return { modalState: newState, airtableState: newAirtableState };
+    });
+  }
+
+  // For opening pricelist modal
+  toggleSheetModal(e) {
+    e.preventDefault();
+    this.setState((prev, props) => {
+      const newState = !prev.modalSheetState;
+      return { modalSheetState: newState };
+    });
+  }
+
+  // update state when sheet is chosen
   handleSheetSubmit(event) {
     event.preventDefault();
-    var selectedSheet = this.props.sheets[event.target.value];
+    // do not update if start pricelist is chosen
+    if (event.target.value !== "choose") {
+      var selectedSheet = this.props.sheets[event.target.value];
 
-    this.setState({
-      sheetName: selectedSheet.sheetName,
-      sheetId: selectedSheet.sheetId,
-      kolVareNr: selectedSheet.kolVareNr,
-      kolVareBeskrivelse: selectedSheet.kolVareBeskrivelse,
-      kolRabatPct: selectedSheet.kolRabatPct,
-      kolBruttoEfterRabat: selectedSheet.kolBruttoEfterRabat,
-      kolBrutto: selectedSheet.kolBrutto,
-      kolAntalPris: selectedSheet.kolAntalPris,
-      tabName: selectedSheet.tabName
+      this.setState({
+        sheetName: selectedSheet.sheetName,
+        sheetId: selectedSheet.sheetId,
+        kolVareNr: selectedSheet.kolVareNr,
+        kolVareBeskrivelse: selectedSheet.kolVareBeskrivelse,
+        kolRabatPct: selectedSheet.kolRabatPct,
+        kolBruttoEfterRabat: selectedSheet.kolBruttoEfterRabat,
+        kolBrutto: selectedSheet.kolBrutto,
+        kolAntalPris: selectedSheet.kolAntalPris,
+        tabName: selectedSheet.tabName
+      });
+    }
+  }
+
+  updateAirtable() {
+    console.log("airtable updating");
+    this.setState((prev, props) => {
+      const newState = !prev.airtableState;
+      return { airtableState: newState };
     });
   }
 
   render() {
-    /*  <li>Varenr: {item[0]}</li>
-        <li>Beskrivelse: {item[1]}</li>
-        <li>EAN: {item[2]}</li>
-        <li>Lev. Varenr: {item[3]}</li>
-        <li>Min antal: {item[4]}</li>
-        <li>Brutto: {item[5]}</li>
-        <li>Netto: {item[6]}</li>
-        <li>Rabat %: {item[7]}</li>
-        <li>Netto efter rabat: {item[8]}</li>
-        <li>Rabatgruppe: {item[9]}</li> */
     const { sheets } = this.props;
-    console.log("logging state from render(): " + JSON.stringify(this.state));
+    console.log(
+      "logging state from render(): " + JSON.stringify(this.state.vareNr)
+    );
 
     return (
-      <div className="has-text-centered">
-        <section className="hero is-medium is-primary is-bold">
-          <div className="hero-body">
-            <div className="columns is-mobile">
-              <div className="column is-half is-offset-one-quarter">
-                <h1 className="title">Search</h1>
-                <button
-                  type="submit"
-                  className="button"
-                  onClick={this.toggleSheetModal}
-                >
-                  Set up pricelist
-                </button>
-                <form onChange={this.handleSheetSubmit}>
-                  <label>
-                    <select>
-                      <option>-- Choose Pricelist --</option>
-                      {sheets &&
-                        sheets.map((sheet, index) => {
-                          return (
-                            <option key={index} value={index}>
-                              {sheet.id}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </label>
-                  {/* <button type="submit" className="button">
-                    Choose pricelist
-                  </button> */}
-                </form>
-                <form onSubmit={this.handleSubmit}>
-                  <label>
-                    <input
-                      type="text"
-                      className="input is-medium is-rounded"
-                      placeholder="scan yo shit"
-                      id="value"
-                      /* value={this.state.value} can maybe be avoided */
-                      onChange={this.handleChange}
-                      autoFocus
-                    />
-                  </label>
-                </form>
+      <div>
+        <nav
+          className="navbar is-transparent is-fixed-top"
+          role="navigation"
+          aria-label="main navigation"
+          style={{ opacity: 0.8 }}
+        >
+          <div className="navbar-brand">
+            <a className="navbar-item" href="/">
+              Scan2sheet
+            </a>
+            {sheets &&
+              sheets.map((sheet, index) => {
+                return (
+                  <a
+                    className="navbar-item"
+                    key={index}
+                    value={index}
+                    href={"#" + sheet.id}
+                  >
+                    {sheet.id}
+                  </a>
+                );
+              })}
+            <a
+              type="submit"
+              className="navbar-item"
+              onClick={this.toggleSheetModal}
+              href="/"
+            >
+              Set up pricelist
+            </a>
+          </div>
+
+          <div className="navbar-menu" />
+        </nav>
+
+        <section className="hero is-medium is-primary is-fullheight">
+          <div className="hero-body" style={{ paddingTop: 0 }}>
+            <div className="container">
+              <div className="columns is-mobile">
+                <div className="column is-half is-offset-one-quarter">
+                  <h1 className="title has-text-centered">
+                    Name of pricelist:{" "}
+                  </h1>
+                  {/* <button
+                    type="submit"
+                    className="button"
+                    onClick={this.toggleSheetModal}
+                  >
+                    Set up pricelist
+                  </button>
+                  <form onChange={this.handleSheetSubmit}>
+                    <label>
+                      <select>
+                        <option value="choose">-- Choose Pricelist --</option>
+                        {sheets &&
+                          sheets.map((sheet, index) => {
+                            return (
+                              <option key={index} value={index}>
+                                {sheet.id}
+                              </option>
+                            );
+                          })}
+                      </select>
+                    </label>
+                  </form> */}
+                  <form onSubmit={this.handleSubmit}>
+                    <label>
+                      <input
+                        type="text"
+                        className="input is-medium is-rounded"
+                        placeholder="scan or search"
+                        id="value"
+                        onChange={this.handleChange}
+                        autoFocus
+                      />
+                    </label>
+                  </form>
+                  <hr />
+                </div>
+              </div>
+
+              <div className="columns is-mobile" style={{ height: "50vh" }}>
+                <div className="column">
+                  <AirtableEmbed airtableState={this.state.airtableState} />
+                </div>
               </div>
             </div>
           </div>
         </section>
-        {/* <ul>{itemFound}</ul>  */}
         <hr />
 
         <p>test numbers</p>
@@ -265,18 +302,12 @@ const mapStateToProps = state => {
     ? state.firestore.ordered.sheets
     : null;
   return {
-    // take in data from state,firestore,ordered,data
-    /*     sheets: state.firestore.sheets
-     */
     sheets: sheets,
     auth: state.firebase.auth,
     profile: state.firebase.profile
   };
 };
 
-/* export default connect(
-  mapStateToProps
-)(Home); */
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([{ collection: "sheets" }])

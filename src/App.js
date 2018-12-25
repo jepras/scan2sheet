@@ -8,11 +8,9 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="has-text-centered">
-          <Switch>
-            <Route exact path="/" component={Home} />
-          </Switch>
-        </div>
+        <Switch>
+          <Route exact path="/" component={Home} />
+        </Switch>
       </BrowserRouter>
     );
   }

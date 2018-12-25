@@ -6,20 +6,20 @@ import { createStore, compose, applyMiddleware } from "redux";
 import "./index.css";
 import App from "./App";
 
-import promise from "redux-promise";
+/* import promise from "redux-promise";
+import logger from "redux-logger"; */
 import thunk from "redux-thunk";
-import logger from "redux-logger";
 
 import { reduxFirestore, getFirestore } from "redux-firestore";
 import { reactReduxFirebase, getFirebase } from "react-redux-firebase";
 import rootReducer from "./store/reducers";
 import fbConfig from "./config/fbConfig";
 
-let middleware = applyMiddleware(
+/* let middleware = applyMiddleware(
   thunk.withExtraArgument({ getFirebase, getFirestore }),
   promise,
   logger
-);
+); */
 
 const store = createStore(
   rootReducer,

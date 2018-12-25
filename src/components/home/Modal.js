@@ -11,7 +11,8 @@ const Modal = ({
   kolRabatPct,
   kolBruttoEfterRabat,
   kolBrutto,
-  sheetName
+  sheetName,
+  updated
 }) => {
   if (!modalState) {
     return null;
@@ -58,6 +59,7 @@ const Modal = ({
                         brutto={item[kolBrutto]}
                         sheetName={sheetName}
                         closeModal={closeModal}
+                        updated={updated}
                       />
                     </td>
                   </tr>

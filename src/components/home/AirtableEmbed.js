@@ -7,9 +7,9 @@ class AirtableEmbed extends React.Component {
     return newAirtableState;
   }
   render() {
-    /* if (this.props.airtableState === true) {
+    if (this.props.airtableState === true) {
       return null;
-    } */
+    }
     console.log(
       "rendering airtableEmbed, as state is changed to " +
         this.props.airtableState

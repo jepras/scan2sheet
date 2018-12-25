@@ -7,7 +7,6 @@ import { firestoreConnect } from "react-redux-firebase";
 import Modal from "./Modal";
 import SheetModal from "./SheetModal";
 import AirtableEmbed from "./AirtableEmbed";
-import Navbar from "../layout/Navbar";
 
 class Home extends Component {
   constructor() {
@@ -170,9 +169,7 @@ class Home extends Component {
 
   render() {
     const { sheets } = this.props;
-    console.log(
-      "logging state from render(): " + JSON.stringify(this.state.vareNr)
-    );
+    console.log("logging state from render(): " + JSON.stringify(this.state));
 
     return (
       <div>
@@ -211,7 +208,10 @@ class Home extends Component {
 
           <div className="navbar-menu" />
         </nav>
-
+        {sheets &&
+          sheets.map((sheet, index) => {
+            return <div />;
+          })}
         <section className="hero is-medium is-primary is-fullheight">
           <div className="hero-body" style={{ paddingTop: 0 }}>
             <div className="container">
@@ -220,7 +220,7 @@ class Home extends Component {
                   <h1 className="title has-text-centered">
                     Name of pricelist:{" "}
                   </h1>
-                  {/* <button
+                  <button
                     type="submit"
                     className="button"
                     onClick={this.toggleSheetModal}
@@ -241,7 +241,7 @@ class Home extends Component {
                           })}
                       </select>
                     </label>
-                  </form> */}
+                  </form>
                   <form onSubmit={this.handleSubmit}>
                     <label>
                       <input

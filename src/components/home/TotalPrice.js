@@ -7,7 +7,8 @@ class TotalPrice extends Component {
     super();
 
     this.state = {
-      value: ""
+      value: "",
+      total: 0
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,7 +25,7 @@ class TotalPrice extends Component {
     this.searchRecord();
     this.props.closeModal();
     // functionality to re render airtable embed
-    this.setState({ updated: this.props.updated + 1 });
+    this.setState({ total: total });
   }
 
   searchRecord() {
@@ -35,6 +36,11 @@ class TotalPrice extends Component {
     const sheet = this.props.sheetName;
     const arr = [];
     console.log("går igang med at søge .. ");
+
+    var total = this.props.efterRabat
+      ? this.state.value * parseFloat(this.props.efterRabat.replace(/,/, "."))
+      : null;
+    console.log("total in searchRecords is: " + this.state.total);
 
     var filter = "IF(varenr = " + varenr + ", TRUE(), FALSE())";
 
@@ -88,8 +94,10 @@ class TotalPrice extends Component {
 
     promise1.then(function(value) {
       console.log(value);
+      console.log("total = " + total);
       console.log("arr length = " + arr.length);
       console.log("arr = " + arr);
+
       if (arr.length === 0) {
         console.log("lets create a new! " + arr);
         base(sheet).create(
@@ -133,7 +141,7 @@ class TotalPrice extends Component {
           <input type="submit" value="Send til sheet" />
         </form>
         <strong>Totalpris: </strong>
-        {total}
+        <p value={total}>{total}</p>
       </div>
     );
   }

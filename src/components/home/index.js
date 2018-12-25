@@ -140,7 +140,6 @@ class Home extends Component {
 
   // update state when sheet is chosen
   handleSheetSubmit(event) {
-    event.preventDefault();
     // do not update if start pricelist is chosen
     if (event.target.value !== "choose") {
       var selectedSheet = this.props.sheets[event.target.value];
@@ -179,23 +178,28 @@ class Home extends Component {
           aria-label="main navigation"
           style={{ opacity: 0.8 }}
         >
-          <div className="navbar-brand">
+          <div className="navbar-brand is-vcentered">
             <a className="navbar-item" href="/">
               Scan2sheet
             </a>
+
             {sheets &&
               sheets.map((sheet, index) => {
                 return (
-                  <a
-                    className="navbar-item"
-                    key={index}
-                    value={index}
-                    href={"#" + sheet.id}
-                  >
-                    {sheet.id}
+                  <a href={"#" + sheet.id}>
+                    <button
+                      className="navbar-item button"
+                      type="link"
+                      key={index}
+                      value={index}
+                      onClick={this.handleSheetSubmit}
+                    >
+                      {sheet.id}
+                    </button>
                   </a>
                 );
               })}
+
             <a
               type="submit"
               className="navbar-item"
@@ -210,62 +214,49 @@ class Home extends Component {
         </nav>
         {sheets &&
           sheets.map((sheet, index) => {
-            return <div />;
-          })}
-        <section className="hero is-medium is-primary is-fullheight">
-          <div className="hero-body" style={{ paddingTop: 0 }}>
-            <div className="container">
-              <div className="columns is-mobile">
-                <div className="column is-half is-offset-one-quarter">
-                  <h1 className="title has-text-centered">
-                    Name of pricelist:{" "}
-                  </h1>
-                  <button
-                    type="submit"
-                    className="button"
-                    onClick={this.toggleSheetModal}
-                  >
-                    Set up pricelist
-                  </button>
-                  <form onChange={this.handleSheetSubmit}>
-                    <label>
-                      <select>
-                        <option value="choose">-- Choose Pricelist --</option>
-                        {sheets &&
-                          sheets.map((sheet, index) => {
-                            return (
-                              <option key={index} value={index}>
-                                {sheet.id}
-                              </option>
-                            );
-                          })}
-                      </select>
-                    </label>
-                  </form>
-                  <form onSubmit={this.handleSubmit}>
-                    <label>
-                      <input
-                        type="text"
-                        className="input is-medium is-rounded"
-                        placeholder="scan or search"
-                        id="value"
-                        onChange={this.handleChange}
-                        autoFocus
-                      />
-                    </label>
-                  </form>
-                  <hr />
-                </div>
-              </div>
+            return (
+              <section
+                className="hero is-medium is-primary is-fullheight"
+                id={sheet.id}
+              >
+                <div className="hero-body" style={{ paddingTop: "60px" }}>
+                  <div className="container">
+                    <div className="columns is-mobile">
+                      <div className="column is-half is-offset-one-quarter">
+                        <h1 className="title has-text-centered">{sheet.id}</h1>
 
-              <div className="columns is-mobile" style={{ height: "50vh" }}>
-                <div className="column">
-                  <AirtableEmbed airtableState={this.state.airtableState} />
+                        <form onSubmit={this.handleSubmit}>
+                          <label>
+                            <input
+                              type="text"
+                              className="input is-medium is-rounded"
+                              placeholder="scan or search"
+                              id="value"
+                              onChange={this.handleChange}
+                            />
+                          </label>
+                        </form>
+                        <hr />
+                      </div>
+                    </div>
+
+                    <div
+                      className="columns is-mobile"
+                      style={{ height: "50vh" }}
+                    >
+                      <div className="column">
+                        <AirtableEmbed
+                          airtableState={this.state.airtableState}
+                          sheetId={sheet.id}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
+              </section>
+            );
+          })}
+
         <hr />
 
         <p>test numbers</p>

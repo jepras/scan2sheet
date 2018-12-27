@@ -61,6 +61,7 @@ class Front extends Component {
                   </h1>
 
                   <hr />
+                  <img src="img/undraw_security_svg.svg" alt="Logo" />
                 </div>
               </div>
             </div>

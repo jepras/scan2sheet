@@ -32,13 +32,18 @@ class TotalPrice extends Component {
     const varenr = this.props.vareNr;
     console.log(varenr);
     const beskrivelse = this.props.beskrivelse;
-    const brutto = this.props.brutto;
+    const brutto = this.props.brutto.replace(".", ",");
     const sheet = this.props.sheetName;
+    const lager = this.state.value;
+    const nettostk = this.props.efterRabat.replace(".", ",");
     const arr = [];
     console.log("går igang med at søge .. ");
 
     var total = this.props.efterRabat
-      ? this.state.value * parseFloat(this.props.efterRabat.replace(/,/, "."))
+      ? String(this.state.value * parseFloat(this.props.efterRabat)).replace(
+          ".",
+          ","
+        )
       : null;
     console.log("total in searchRecords is: " + this.state.total);
 
@@ -62,7 +67,8 @@ class TotalPrice extends Component {
             base(sheet).update(
               record.get("recordId"),
               {
-                netto: total
+                totalnetto: total,
+                lager: lager
               },
               function(err, record) {
                 if (err) {
@@ -73,7 +79,7 @@ class TotalPrice extends Component {
                   "varenr: " +
                     record.get("varenr") +
                     " er opdateret til: " +
-                    record.get("netto")
+                    record.get("totalnetto")
                 );
               }
             );
@@ -100,12 +106,16 @@ class TotalPrice extends Component {
 
       if (arr.length === 0) {
         console.log("lets create a new! " + arr);
+        console.log(total);
+        console.log(typeof total);
         base(sheet).create(
           {
             varenr: varenr,
             beskrivelse: beskrivelse,
-            brutto: brutto,
-            netto: total
+            bruttostk: brutto,
+            nettostk: nettostk,
+            lager: lager,
+            totalnetto: total
           },
           function(err, record) {
             if (err) {
@@ -123,9 +133,14 @@ class TotalPrice extends Component {
 
   render() {
     var total = this.props.efterRabat
-      ? this.state.value * parseFloat(this.props.efterRabat.replace(/,/, "."))
+      ? String(this.state.value * parseFloat(this.props.efterRabat)).replace(
+          ".",
+          ","
+        )
       : null;
-    console.log(total);
+    console.log(typeof total);
+
+    /* .replace(/,/, ".") */
 
     return (
       <div>

@@ -321,6 +321,7 @@ class Home extends Component {
             items={this.state.items}
             submitModal={this.submitModal}
             kolVareNr={this.state.kolVareNr}
+            kolVareExtra={this.state.kolVareExtra}
             kolVareBeskrivelse={this.state.kolVareBeskrivelse}
             kolRabatPct={this.state.kolRabatPct}
             kolBruttoEfterRabat={this.state.kolBruttoEfterRabat}

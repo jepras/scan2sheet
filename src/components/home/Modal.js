@@ -6,6 +6,7 @@ const Modal = ({
   modalState,
   items,
   kolVareNr,
+  kolVareExtra,
   kolVareBeskrivelse,
   kolAntalPris,
   kolRabatPct,
@@ -54,6 +55,7 @@ const Modal = ({
                     <td>
                       <TotalPrice
                         efterRabat={item[kolBruttoEfterRabat]}
+                        ekstra={item[kolVareExtra]}
                         vareNr={item[kolVareNr]}
                         beskrivelse={item[kolVareBeskrivelse]}
                         brutto={item[kolBrutto]}

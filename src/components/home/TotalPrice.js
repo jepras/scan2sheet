@@ -32,6 +32,7 @@ class TotalPrice extends Component {
   searchRecord() {
     console.log(this.state.total);
     const varenr = this.props.vareNr;
+    const ekstra = this.props.ekstra;
     console.log(varenr);
     const beskrivelse = this.props.beskrivelse;
     const brutto = this.props.brutto.replace(".", ",");
@@ -127,6 +128,7 @@ class TotalPrice extends Component {
         base(sheet).create(
           {
             varenr: varenr,
+            ekstra: ekstra,
             beskrivelse: beskrivelse,
             bruttostk: brutto,
             nettostk: nettostk,

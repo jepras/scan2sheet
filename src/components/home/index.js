@@ -23,6 +23,7 @@ class Home extends Component {
       sheetName: "",
       sheetId: "",
       kolVareNr: "0",
+      kolVareExtra: "",
       kolVareBeskrivelse: "",
       kolRabatPct: "",
       kolBruttoEfterRabat: "",
@@ -83,19 +84,36 @@ class Home extends Component {
 
         // format column number string as integer
         let kolVareNr = parseFloat(this.state.kolVareNr);
-        console.log(batchRowValues[5][kolVareNr]);
+        let kolVareExtra = parseFloat(this.state.kolVareExtra);
+        console.log(kolVareExtra);
+        console.log(kolVareExtra.length);
+        console.log("test " + batchRowValues[5][kolVareNr]);
         // minify column description
         let kolVareBeskrivelse = this.state.kolVareBeskrivelse;
 
         // Initiate variable for setting state
         let found = [];
 
+        console.log("entered value: " + this.state.value);
+
         // Check if string is digits
         var isnum = /^\d+$/.test(this.state.value);
 
         if (isnum) {
           // loop through pricelist for number
-
+          if (kolVareExtra === 1) {
+            console.log("initiating search in extra column " + kolVareExtra);
+            for (let i = 1, len = batchRowValues.length; i < len; i++) {
+              if (
+                batchRowValues[i][kolVareExtra].includes(this.state.value) &&
+                found.length < 100
+              ) {
+                console.log("found! " + batchRowValues[i]);
+                found.push(batchRowValues[i]);
+              }
+            }
+          }
+          console.log("initiate search in original column");
           for (let i = 1, len = batchRowValues.length; i < len; i++) {
             if (
               batchRowValues[i][kolVareNr].includes(this.state.value) &&
@@ -156,6 +174,7 @@ class Home extends Component {
         sheetName: selectedSheet.sheetName,
         sheetId: selectedSheet.sheetId,
         kolVareNr: selectedSheet.kolVareNr,
+        kolVareExtra: selectedSheet.kolVareExtra,
         kolVareBeskrivelse: selectedSheet.kolVareBeskrivelse,
         kolRabatPct: selectedSheet.kolRabatPct,
         kolBruttoEfterRabat: selectedSheet.kolBruttoEfterRabat,
@@ -182,6 +201,7 @@ class Home extends Component {
       sheetName: selectedSheet.sheetName,
       sheetId: selectedSheet.sheetId,
       kolVareNr: selectedSheet.kolVareNr,
+      kolVareExtra: selectedSheet.kolVareExtra,
       kolVareBeskrivelse: selectedSheet.kolVareBeskrivelse,
       kolRabatPct: selectedSheet.kolRabatPct,
       kolBruttoEfterRabat: selectedSheet.kolBruttoEfterRabat,
@@ -272,6 +292,7 @@ class Home extends Component {
                           placeholder="scan or search"
                           id="value"
                           onChange={this.handleChange}
+                          autoFocus
                         />
                       </label>
                     </form>

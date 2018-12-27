@@ -43,9 +43,11 @@ class TotalPrice extends Component {
 
     if (this.props.efterRabat) {
       if (!this.props.efterRabat.includes(",")) {
-        console.log("no ,,,,,");
+        console.log("no comma");
         var total = this.props.efterRabat
-          ? String(this.state.value * parseFloat(this.props.efterRabat))
+          ? String(
+              this.state.value * parseFloat(this.props.efterRabat)
+            ).replace(".", ",")
           : null;
       } else {
         console.log("med tegn");
@@ -150,7 +152,9 @@ class TotalPrice extends Component {
       if (!this.props.efterRabat.includes(",")) {
         console.log("no ,,,,,");
         var total = this.props.efterRabat
-          ? String(this.state.value * parseFloat(this.props.efterRabat))
+          ? String(
+              this.state.value * parseFloat(this.props.efterRabat)
+            ).replace(".", ",")
           : null;
       } else {
         console.log("med tegn");

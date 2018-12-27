@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class AirtableEmbed extends React.Component {
+class AirtableEmbed extends Component {
   shouldComponentUpdate(nextProps) {
     const newAirtableState =
       this.props.airtableState !== nextProps.airtableState;

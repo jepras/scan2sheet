@@ -130,18 +130,32 @@ class TotalPrice extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <label>
-            <input
-              type="number"
-              value={this.state.value}
-              onChange={this.handleChange}
-              autoFocus
-            />
-          </label>
-          <input type="submit" value="Send til sheet" />
+          <div className="columns">
+            <div className="column">
+              <label>
+                <input
+                  type="number"
+                  className="input"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                  autoFocus
+                />
+              </label>
+            </div>
+            <div className="column">
+              <input
+                type="submit"
+                className="button is-primary"
+                value="Send2Sheet"
+              />
+            </div>
+          </div>
         </form>
-        <strong>Totalpris: </strong>
-        <p value={total}>{total}</p>
+
+        <p value={total}>
+          <strong>Total: </strong>
+          {total}
+        </p>
       </div>
     );
   }

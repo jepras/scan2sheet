@@ -70,7 +70,7 @@ const Modal = ({
         </section>
         <footer className="modal-card-foot">
           <p className="text-center">
-            remember to love your little brother{" "}
+            Scan like you have never scanned before{" "}
             <span role="img" aria-label="emoji">
               ✌
             </span>

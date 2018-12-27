@@ -143,7 +143,7 @@ class Home extends Component {
     });
   }
 
-  /* componentDidMount() {
+  componentDidMount() {
     if (this.props.sheet) {
       var selectedSheet = this.props.sheet;
 
@@ -162,7 +162,7 @@ class Home extends Component {
       console.log("component state updated after sheet was found");
     }
     console.log("component updated without state");
-  } */
+  }
 
   componentWillReceiveProps(nextProps) {
     var nextPage = nextProps.match.params.id;

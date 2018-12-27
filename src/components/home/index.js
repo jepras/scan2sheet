@@ -98,7 +98,10 @@ class Home extends Component {
           // loop through pricelist for number
 
           for (let i = 1, len = batchRowValues.length; i < len; i++) {
-            if (batchRowValues[i][kolVareNr].includes(this.state.value)) {
+            if (
+              batchRowValues[i][kolVareNr].includes(this.state.value) &&
+              found.length < 100
+            ) {
               console.log("found! " + batchRowValues[i]);
               found.push(batchRowValues[i]);
             }
@@ -108,7 +111,10 @@ class Home extends Component {
           console.log("this.state.value is text: " + this.state.value);
           for (let i = 1, len = batchRowValues.length; i < len; i++) {
             if (
-              batchRowValues[i][kolVareBeskrivelse].includes(this.state.value)
+              batchRowValues[i][kolVareBeskrivelse].includes(
+                this.state.value
+              ) &&
+              found.length < 100
             ) {
               console.log("found! " + batchRowValues[i]);
               found.push(batchRowValues[i]);

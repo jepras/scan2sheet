@@ -8,7 +8,7 @@ class TotalPrice extends Component {
 
     this.state = {
       value: "",
-      total: 0
+      total: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,6 +21,7 @@ class TotalPrice extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
     // overwrite if exists or create new
     this.searchRecord();
     this.props.closeModal();
@@ -29,6 +30,7 @@ class TotalPrice extends Component {
   }
 
   searchRecord() {
+    console.log(this.state.total);
     const varenr = this.props.vareNr;
     console.log(varenr);
     const beskrivelse = this.props.beskrivelse;
@@ -39,13 +41,25 @@ class TotalPrice extends Component {
     const arr = [];
     console.log("går igang med at søge .. ");
 
-    var total = this.props.efterRabat
-      ? String(this.state.value * parseFloat(this.props.efterRabat)).replace(
-          ".",
-          ","
-        )
-      : null;
-    console.log("total in searchRecords is: " + this.state.total);
+    if (this.props.efterRabat) {
+      if (!this.props.efterRabat.includes(",")) {
+        console.log("no ,,,,,");
+        var total = this.props.efterRabat
+          ? String(this.state.value * parseFloat(this.props.efterRabat))
+          : null;
+      } else {
+        console.log("med tegn");
+        total = this.props.efterRabat
+          ? String(
+              this.state.value *
+                parseFloat(this.props.efterRabat.replace(",", "."))
+            ).replace(".", ",")
+          : null;
+      }
+      console.log(total);
+      console.log(typeof total);
+    }
+    console.log("total in searchRecords is: " + total);
 
     var filter = "IF(varenr = " + varenr + ", TRUE(), FALSE())";
 
@@ -132,13 +146,24 @@ class TotalPrice extends Component {
   }
 
   render() {
-    var total = this.props.efterRabat
-      ? String(this.state.value * parseFloat(this.props.efterRabat)).replace(
-          ".",
-          ","
-        )
-      : null;
-    console.log(typeof total);
+    if (this.props.efterRabat) {
+      if (!this.props.efterRabat.includes(",")) {
+        console.log("no ,,,,,");
+        var total = this.props.efterRabat
+          ? String(this.state.value * parseFloat(this.props.efterRabat))
+          : null;
+      } else {
+        console.log("med tegn");
+        total = this.props.efterRabat
+          ? String(
+              this.state.value *
+                parseFloat(this.props.efterRabat.replace(",", "."))
+            ).replace(".", ",")
+          : null;
+      }
+      console.log(total);
+      console.log(typeof total);
+    }
 
     /* .replace(/,/, ".") */
 
@@ -152,6 +177,8 @@ class TotalPrice extends Component {
                   type="number"
                   className="input"
                   value={this.state.value}
+                  name={total}
+                  key={total}
                   onChange={this.handleChange}
                   autoFocus
                 />

@@ -80,7 +80,6 @@ class Home extends Component {
       .then(data => {
         // search variables in right place
         let batchRowValues = data.valueRanges[0].values;
-        console.log(batchRowValues);
 
         // format column number string as integer
         let kolVareNr = parseFloat(this.state.kolVareNr);

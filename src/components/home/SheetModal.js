@@ -15,7 +15,8 @@ class SheetModal extends Component {
       kolBrutto: "0",
       kolAntalPris: "0",
       kolRabatPct: "0",
-      kolBruttoEfterRabat: "0"
+      kolBruttoEfterRabat: "0",
+      airtableId: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -81,6 +82,18 @@ class SheetModal extends Component {
                     <input
                       class="input"
                       id="sheetId"
+                      type="text"
+                      placeholder="Text input"
+                      onChange={this.handleChange}
+                    />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Airtable id</label>
+                  <div class="control">
+                    <input
+                      class="input"
+                      id="airtableId"
                       type="text"
                       placeholder="Text input"
                       onChange={this.handleChange}

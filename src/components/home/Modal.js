@@ -23,7 +23,7 @@ const Modal = ({
   return (
     <div className="modal is-active">
       <div className="modal-background" onClick={closeModal} />
-      <div className="modal-card">
+      <div className="modal-card" style={{ width: "90%" }}>
         <header className="modal-card-head">
           <p className="modal-card-title">Enter amount bought</p>
           <button className="delete" onClick={closeModal} />

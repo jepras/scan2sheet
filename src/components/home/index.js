@@ -221,9 +221,14 @@ class Home extends Component {
     var selectedSheet = this.props.sheet;
 
     if (prevState.airtableId !== this.state.airtableId) {
-      this.setState({
-        airtableId: selectedSheet.airtableId
-      });
+      setTimeout(
+        function() {
+          this.setState({
+            airtableId: selectedSheet.airtableId
+          });
+        }.bind(this),
+        2000
+      );
     }
   }
 

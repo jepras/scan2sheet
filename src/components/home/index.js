@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import config from "../../config/apiConfig";
@@ -31,7 +32,8 @@ class Home extends Component {
       kolAntalPris: "",
       tabName: "",
       updated: 0,
-      airtableId: ""
+      airtableId: "",
+      focusState: true
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -49,10 +51,10 @@ class Home extends Component {
     });
 
     // start searching as the user type
-    if (event.target.value.length > 4) {
+    /* if (event.target.value.length >= 3) {
       console.log("..starting to fetch data..");
       this.getValue();
-    }
+    } */
   }
 
   // log state, open modal & reset form
@@ -60,6 +62,7 @@ class Home extends Component {
     event.preventDefault();
     console.log(this.state);
     this.toggleModal();
+    this.getValue();
     event.target.reset();
   }
 
@@ -128,9 +131,9 @@ class Home extends Component {
           console.log("this.state.value is text: " + this.state.value);
           for (let i = 1, len = batchRowValues.length; i < len; i++) {
             if (
-              batchRowValues[i][kolVareBeskrivelse].includes(
-                this.state.value
-              ) &&
+              batchRowValues[i][kolVareBeskrivelse]
+                .toLowerCase()
+                .includes(this.state.value.toLowerCase()) &&
               found.length < 100
             ) {
               console.log("found! " + batchRowValues[i]);
@@ -141,6 +144,22 @@ class Home extends Component {
         // update state with found items
         this.setState({ items: found });
         console.log("items found from fetch are: " + found);
+
+        // alert if not found
+        var promiseEnd = new Promise(function(resolve, reject) {
+          setTimeout(function() {
+            resolve("3 seconds gone..");
+          }, 3000);
+        });
+
+        // bind this to self for use in promise
+        var self = this;
+        promiseEnd.then(function(value) {
+          if (found.length === 0) {
+            alert("no items found for search");
+            self.toggleModal();
+          }
+        });
       })
       .catch(function(err) {
         alert("didn't find item");
@@ -153,6 +172,14 @@ class Home extends Component {
     this.setState((prev, props) => {
       const newState = !prev.modalState;
       const newAirtableState = !prev.airtableState;
+      if (newState === false) {
+        return {
+          modalState: newState,
+          airtableState: newAirtableState,
+          airtableId: "",
+          items: []
+        };
+      }
       return { modalState: newState, airtableState: newAirtableState };
     });
   }
@@ -186,6 +213,18 @@ class Home extends Component {
       console.log("component state updated after sheet was found");
     }
     console.log("component updated without state");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps);
+    console.log(prevState);
+    var selectedSheet = this.props.sheet;
+
+    if (prevState.airtableId !== this.state.airtableId) {
+      this.setState({
+        airtableId: selectedSheet.airtableId
+      });
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -223,15 +262,16 @@ class Home extends Component {
   }
 
   render() {
-    if (this.props.airtableId === "") {
+    /* if (this.props.airtableId === "") {
       return null;
-    }
+    } */
 
     const { sheet, sheets } = this.props;
     console.log("state & props from render()");
     console.log(this.state);
     console.log(this.props);
-    if (sheet && sheet.airtableId) {
+
+    if (sheet) {
       return (
         <div>
           <section
@@ -292,7 +332,7 @@ class Home extends Component {
                           placeholder="scan or search"
                           id="value"
                           onChange={this.handleChange}
-                          autoFocus
+                          ref={input => input && input.focus()}
                         />
                       </label>
                     </form>
@@ -303,7 +343,7 @@ class Home extends Component {
                   <div className="column">
                     <AirtableEmbed
                       airtableState={this.state.airtableState}
-                      airtableId={sheet.airtableId}
+                      airtableId={this.state.airtableId}
                     />
                     <p className="has-text-centered">
                       Test numbers - DZ: 5655005065 - CR: 14181681 - PS: 46620 -

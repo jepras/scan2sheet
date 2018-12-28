@@ -33,7 +33,7 @@ class TotalPrice extends Component {
     console.log(this.state.total);
     const varenr = this.props.vareNr;
     const ekstra = this.props.ekstra;
-    console.log(varenr);
+    console.log("varenr: " + varenr);
     const beskrivelse = this.props.beskrivelse;
     const brutto = this.props.brutto.replace(".", ",");
     const sheet = this.props.sheetName;
@@ -152,14 +152,12 @@ class TotalPrice extends Component {
   render() {
     if (this.props.efterRabat) {
       if (!this.props.efterRabat.includes(",")) {
-        console.log("no ,,,,,");
         var total = this.props.efterRabat
           ? String(
               this.state.value * parseFloat(this.props.efterRabat)
             ).replace(".", ",")
           : null;
       } else {
-        console.log("med tegn");
         total = this.props.efterRabat
           ? String(
               this.state.value *
@@ -167,11 +165,7 @@ class TotalPrice extends Component {
             ).replace(".", ",")
           : null;
       }
-      console.log(total);
-      console.log(typeof total);
     }
-
-    /* .replace(/,/, ".") */
 
     return (
       <div>
@@ -186,7 +180,7 @@ class TotalPrice extends Component {
                   name={total}
                   key={total}
                   onChange={this.handleChange}
-                  autoFocus
+                  ref={input => input && input.focus()}
                 />
               </label>
             </div>

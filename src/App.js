@@ -1,19 +1,21 @@
 import React, { Component } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
-import "./App.css";
-import Home from "./components/home";
-import Front from "./components/home/Front";
+/* exact /app/path or just /path */
 
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <React.Fragment>
+        <p>App Page</p>
+        {/* <LoggedInHeader />
+        switch only renders one 
         <Switch>
-          <Route exact path="/" component={Front} />
-          <Route path="/pricelist/:id" component={Home} />
+          <Route path="/" component={AppPage} />
+          <Route path="/pricelist/:id" component={OldHome} />
         </Switch>
-      </BrowserRouter>
+        <Footer /> */}
+      </React.Fragment>
     );
   }
 }

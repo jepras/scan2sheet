@@ -14,7 +14,7 @@ import { reactReduxFirebase, getFirebase } from "react-redux-firebase";
 
 // import from tree
 import "./index.css";
-import App from "./App";
+import Wrapper from "./Wrapper";
 import rootReducer from "./store/reducers";
 import fbConfig from "./config/fbConfig";
 
@@ -43,7 +43,7 @@ store.firebaseAuthIsReady.then(() => {
   ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <Wrapper />
       </BrowserRouter>
     </Provider>,
     document.getElementById("root")

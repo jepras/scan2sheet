@@ -14,7 +14,7 @@ class Front extends Component {
           style={{ minHeight: "92vh" }}
         >
           <nav
-            className="navbar is-transparent is-fixed-top is-primary"
+            className="navbar is-transparent is-primary"
             role="navigation"
             aria-label="main navigation"
             style={{ opacity: 0.8, backgroundColor: "#00d1b2" }}

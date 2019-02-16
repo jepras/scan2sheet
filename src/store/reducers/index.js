@@ -4,13 +4,16 @@ import { combineReducers } from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
 
+import authReducer from "./authReducer";
+
 const rootReducer = combineReducers({
   // firestoreReducer syncs data in database to firestore
   firestore: firestoreReducer,
   // for login
   firebase: firebaseReducer,
   airtableRecord: airtableRecord,
-  sheetReducer: sheetReducer
+  sheetReducer: sheetReducer,
+  auth: authReducer
 });
 
 export default rootReducer;

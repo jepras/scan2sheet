@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import config from "../../config/apiConfig";
@@ -267,10 +266,6 @@ class Home extends Component {
   }
 
   render() {
-    /* if (this.props.airtableId === "") {
-      return null;
-    } */
-
     const { sheet, sheets } = this.props;
     console.log("state & props from render()");
     console.log(this.state);
@@ -285,7 +280,7 @@ class Home extends Component {
             style={{ minHeight: "92vh" }}
           >
             <nav
-              className="navbar is-transparent is-fixed-top is-primary"
+              className="navbar is-transparent is-primary"
               role="navigation"
               aria-label="main navigation"
               style={{ opacity: 0.8, backgroundColor: "#00d1b2" }}
@@ -323,6 +318,7 @@ class Home extends Component {
                 </a>
               </div>
             </nav>
+
             <div className="hero-body" style={{ paddingTop: "45px" }}>
               <div className="container">
                 <p>productize</p>

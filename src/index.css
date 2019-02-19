@@ -14,3 +14,7 @@ code {
 }
 
 /* Add custom CSS */
+.navbar-link {
+  font-weight: "bold";
+  color: "black";
+}

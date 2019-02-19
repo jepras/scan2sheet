@@ -2,8 +2,93 @@ import React from "react";
 import { NavLink, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/actions/authActions";
+import { Redirect } from "react-router-dom";
 
-const LoggedOutHeader = props => {
+import {
+  Collapse,
+  UncontrolledDropdown,
+  DropdownMenu,
+  DropdownToggle,
+  DropdownItem
+} from "reactstrap";
+
+class LoggedInHeader extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      isOpen: false
+    };
+  }
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  }
+
+  signOut = () => {
+    console.log(this.props);
+    this.props.signOut();
+  };
+
+  render() {
+    const { authError, auth } = this.props;
+    if (!auth.uid) return <Redirect to="/" />;
+
+    return (
+      <div>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+          <Link to="/" className="navbar-item is-vcentered">
+            Scan2sheet
+          </Link>
+
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            onClick={this.toggle}
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
+
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <ul className="navbar-nav mr-auto">
+              <li className="nav-item">
+                <NavLink to="/scan" className="navbar-item" type="link">
+                  Scan
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/dashboard" className="navbar-item" type="link">
+                  Dashboard
+                </NavLink>
+              </li>
+            </ul>
+            <UncontrolledDropdown nav inNavbar>
+              <DropdownToggle nav caret>
+                Name
+              </DropdownToggle>
+
+              <DropdownMenu>
+                <DropdownItem>Profile</DropdownItem>
+                <DropdownItem>Settings</DropdownItem>
+                <DropdownItem divider />
+                <DropdownItem onClick={this.signOut}>Logout</DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </Collapse>
+        </nav>
+      </div>
+    );
+  }
+}
+
+/* const LoggedOutHeader = props => {
   console.log(props);
 
   return (
@@ -19,14 +104,6 @@ const LoggedOutHeader = props => {
             Scan2sheet
           </NavLink>
 
-          <NavLink
-            to="/dashboard"
-            className="navbar-item"
-            type="link"
-            style={{ fontWeight: "bold", color: "black" }}
-          >
-            Dashboard
-          </NavLink>
           <NavLink
             to="/scan"
             className="navbar-item"
@@ -60,7 +137,7 @@ const LoggedOutHeader = props => {
       </nav>
     </div>
   );
-};
+}; */
 
 const mapStateToProps = state => {
   return {
@@ -78,4 +155,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoggedOutHeader);
+)(LoggedInHeader);

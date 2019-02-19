@@ -14,6 +14,10 @@ export const signIn = () => {
       .then(() => {
         dispatch({ type: "LOGIN_SUCCESS" });
       })
+      .then(() => {
+        this.props.history.push("/app");
+        console.log("pushing to app");
+      })
       .catch(err => {
         dispatch({ type: "LOGIN_ERROR", err });
       });

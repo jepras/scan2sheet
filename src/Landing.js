@@ -13,7 +13,7 @@ import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 
 import Footer from "./components/common/Footer";
-import LoggedOutHeader from "./components/common/LoggedOutHeader";
+import LoggedOutHeader from "./components/common/LoggedInHeader";
 
 class Landing extends Component {
   render() {
@@ -22,14 +22,12 @@ class Landing extends Component {
       <main>
         <p>Landing Page</p>
         <LoggedOutHeader signOut={this.props.signOut} />
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route path="/features" component={Features} />
-          <Route path="/pricing" component={Pricing} />
-          <Route path="/about" component={About} />
-          <Route path="/login" component={Login} />
-          <Route path="/signup" component={SignUp} />
-        </Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/features" component={Features} />
+        <Route path="/pricing" component={Pricing} />
+        <Route path="/about" component={About} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={SignUp} />
         <Footer />
       </main>
     );

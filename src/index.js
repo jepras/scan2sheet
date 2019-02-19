@@ -14,6 +14,7 @@ import { reactReduxFirebase, getFirebase } from "react-redux-firebase";
 
 // import from tree
 import "./index.css";
+import "bootstrap/dist/css/bootstrap.css";
 import Wrapper from "./Wrapper";
 import rootReducer from "./store/reducers";
 import fbConfig from "./config/fbConfig";

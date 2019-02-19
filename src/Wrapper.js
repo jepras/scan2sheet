@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import "./App.css";
+import "bulma/css/bulma.css";
 
 import App from "./App";
 import Landing from "./Landing";
@@ -13,9 +14,10 @@ class Wrapper extends Component {
       <Fragment>
         {/* if logged in <App>, if not <Landing> */}
         <Switch>
+          <Route path="/app" component={App} />
           <Route path="/" component={Landing} />
           {/* <Route exact path="/about" component={About} /> // works */}
-          <Route
+          {/* <Route
             path="/app"
             render={() =>
               loggedIn ? (
@@ -28,7 +30,7 @@ class Wrapper extends Component {
                 />
               )
             }
-          />
+          /> */}
         </Switch>
       </Fragment>
     );

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/actions/authActions";
 
-const LoggedOutHeader = props => {
+const LoggedInHeader = props => {
   console.log(props);
 
   return (
@@ -97,4 +97,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoggedOutHeader);
+)(LoggedInHeader);

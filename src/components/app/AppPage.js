@@ -5,6 +5,9 @@ export default class AppPage extends Component {
     return (
       <div>
         <p>this is my app</p>
+        <button type="button" class="btn btn-primary">
+          Primary
+        </button>
       </div>
     );
   }

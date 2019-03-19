@@ -7,6 +7,8 @@ import {
 } from "../../store/actions/authActions";
 import { Redirect } from "react-router-dom";
 
+/* import firebase from "../../config/fbConfig";
+ */
 class Login extends Component {
   handleChangeMail = e => {
     console.log(this.props);
@@ -21,6 +23,17 @@ class Login extends Component {
     this.props.signIn();
   };
 
+  /*   signInGoogle = () => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(result => {
+        console.log("user signed in?");
+      });
+  }; */
+
   render() {
     const { authError, auth } = this.props;
     if (auth.uid) return <Redirect to="/app" />;
@@ -31,6 +44,7 @@ class Login extends Component {
           <div className="hero-copy text-center column is-half is-offset-one-quarter">
             <form className="white" onSubmit={this.handleSubmit}>
               <h1 className="grey-text text-darken-3">Sign In</h1>
+
               <div className="field">
                 <input
                   placeholder="Email"

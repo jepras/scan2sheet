@@ -2,3 +2,23 @@
 export const HANDLE_CHANGE_USERNAME = "HANDLE_CHANGE_USERNAME";
 export const HANDLE_CHANGE_MAIL = "HANDLE_CHANGE_MAIL";
 export const HANDLE_CHANGE_PASSWORD = "HANDLE_CHANGE_PASSWORD";
+
+// Handle personal updates
+export const UPDATE_FIRSTNAME = "UPDATE_FIRSTNAME";
+export const UPDATE_LASTNAME = "UPDATE_LASTNAME";
+export const UPDATE_USERNAME = "UPDATE_USERNAME";
+export const UPDATE_EMAIL = "UPDATE_EMAIL";
+export const UPDATE_COMPANY = "UPDATE_COMPANY";
+
+// Handle account updates
+export const AUTH_GOOGLE = "AUTH_GOOGLE";
+export const GOOGLE_POPUP = "GOOGLE_POPUP";
+export const GOOGLE_AUTH_SUCCESS = "GOOGLE_AUTH_SUCCESS";
+export const GOOGLE_AUTH_FAIL = "GOOGLE_AUTH_FAIL";
+
+export const ACCOUNT_SUCCESS = "ACCOUNT_SUCCESS";
+export const UNLINK_SUCCESS = "UNLINK_SUCCESS";
+export const CLIENT_SUCCESS = "CLIENT_SUCCESS";
+
+// Link submission
+export const UPDATE_LINK = "UPDATE_LINK";

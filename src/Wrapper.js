@@ -9,15 +9,12 @@ import Landing from "./Landing";
 
 class Wrapper extends Component {
   render() {
-    const loggedIn = true;
+    let loggedIn = true;
     return (
       <Fragment>
         {/* if logged in <App>, if not <Landing> */}
         <Switch>
-          <Route path="/app" component={App} />
-          <Route path="/" component={Landing} />
-          {/* <Route exact path="/about" component={About} /> // works */}
-          {/* <Route
+          <Route
             path="/app"
             render={() =>
               loggedIn ? (
@@ -30,7 +27,8 @@ class Wrapper extends Component {
                 />
               )
             }
-          /> */}
+          />
+          <Route path="/" component={Landing} />
         </Switch>
       </Fragment>
     );

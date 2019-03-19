@@ -8,6 +8,10 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta name="theme-color" content="#000000" />
+    <meta
+      name="google-signin-client_id"
+      content="865616064235-ba4eh0l1799okm9fvngfancr6o7a9lft.apps.googleusercontent.com"
+    />
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
@@ -22,8 +26,27 @@
       src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
     ></script>
   </head>
-  <body>
+  <body class="bg-light" style="height: 100vh">
     <noscript> You need to enable JavaScript to run this app. </noscript>
     <div id="root"></div>
+    <!-- <script src="https://apis.google.com/js/api.js"></script> -->
+    <!-- <script
+      src="https://apis.google.com/js/client:platform.js?onload=start"
+      async
+      defer
+    ></script>
+    <script>
+      function start() {
+        console.log("script running");
+        gapi.load("auth2", function() {
+          auth2 = gapi.auth2.init({
+            client_id:
+              "865616064235-ba4eh0l1799okm9fvngfancr6o7a9lft.apps.googleusercontent.com",
+            scope: "profile email"
+          });
+        });
+      }
+    </script> -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
   </body>
 </html>

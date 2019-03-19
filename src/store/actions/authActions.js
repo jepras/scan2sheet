@@ -79,9 +79,33 @@ export const signUp = () => {
       .then(() => {
         dispatch({ type: "SIGNUP_SUCCESS" });
       })
+      .then(() => {
+        this.props.history.push("/app");
+        console.log("pushing to app");
+      })
       .catch(err => {
         dispatch({ type: "SIGNUP_ERROR", err });
       });
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log("user frmo auth state changed", user);
+        user
+          .updateProfile({
+            displayName: username
+          })
+          .then(function() {
+            console.log("update succes! ", user.displayName);
+          })
+          .catch(function(error) {
+            // An error happened.
+            console.log("fail on display name update");
+          });
+      } else {
+        // No user is signed in.
+        console.log("no user from authstatechanged");
+      }
+    });
   };
 };
 
